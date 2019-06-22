@@ -2,15 +2,35 @@ import React from 'react';
 import { Button, Rate, Icon, Switch } from 'antd';
 import { Reviews } from '../components/Reviews/Reviews';
 import TextArea from 'antd/lib/input/TextArea';
+import * as fluence from '../utils/fluence';
 
 export class PageNewReview extends React.Component {
   state = {
     rate: undefined,
     comment: '',
     advanced: false,
+    loading: false,
   };
+
+  submit = () => {
+    const { rate, comment, advanced } = this.state;
+    const { host } = this.props;
+    this.setState({ loading: true });
+
+    fluence
+      .createReview({
+        text: comment,
+        rating: rate,
+        url: host,
+      })
+      .then((response) => {
+        this.setState({ loading: false });
+      });
+  };
+
   render() {
     const { host, onOpenPageList } = this.props;
+    const { rate, comment, advanced } = this.state;
     console.log(this.state);
     return (
       <div>
@@ -41,7 +61,13 @@ export class PageNewReview extends React.Component {
             &nbsp; Advanced storage
           </p>
           <p>
-            <Button>Submit</Button>
+            <Button
+              disabled={rate === undefined}
+              onClick={this.submit}
+              loading={this.state.loading}
+            >
+              Submit
+            </Button>
           </p>
         </div>
       </div>
