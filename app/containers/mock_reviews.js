@@ -43,6 +43,22 @@ const reviews = [
     comment:
       'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu sagittis magna.',
   },
+  {
+    date: 1560000000000,
+    rate: 2,
+    likes: 0,
+    dislikes: 0,
+    comment:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu sagittis magna.',
+  },
+  {
+    date: 1560000000000,
+    rate: 2,
+    likes: 0,
+    dislikes: 0,
+    comment:
+      'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque eu sagittis magna.',
+  },
 ];
 
 module.exports = reviews;

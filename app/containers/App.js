@@ -35,20 +35,15 @@ export default class App extends Component {
         >
           <h1>{host}</h1>
           <h4>Reputation</h4>
-          <div style={{ fontSize: 60 }}>{rate}</div>
+          <div style={{ fontSize: 60, lineHeight: '1' }}>{rate}</div>
           <Rate disabled allowHalf value={rate} />
         </header>
 
-        <section
-          style={{
-            padding: 10,
-            // marginTop: 230
-          }}
-        >
-          <div style={{ textAlign: 'center' }}>
-            <Button size="large">Rate this site</Button>
-          </div>
-          <div />
+        <div style={{ textAlign: 'center', marginTop: 8 }}>
+          <Button size="large">Rate this site</Button>
+        </div>
+
+        <section style={{ padding: 10 }}>
           <Reviews reviews={reviews} host={host} />
         </section>
 
