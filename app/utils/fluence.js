@@ -25,8 +25,9 @@ async function createReview(review) {
     throw new Error('URL is required');
   }
 
+  const id = Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}':${getAuthor()}`;
+  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}':${getAuthor()}:${id}`;
   return session.request(command).result();
 }
 
@@ -54,6 +55,7 @@ async function queryReviews(url) {
           rating: reviewParts[1],
           timestamp: reviewParts[2],
           author: reviewParts[3],
+          id: reviewParts[4],
           url,
         });
       }
@@ -65,16 +67,16 @@ async function queryReviews(url) {
 /**
  * Leaves vote for review
  *
- * @param {URL to vote for} url
+ * @param {review id to vote for} id
  * @param {type of vote, either 'upvote' or 'downvote'} type
  */
-async function vote(url, type) {
+async function vote(id, type) {
   if (!(type === 'upvote' || type === 'downvote')) {
     throw new Error('Invalid vote type');
   }
 
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `INCR ${url}_${type}`;
+  const command = `SADD ${id}_${type} ${getAuthor()}`;
 
   return session.request(command).result().then((r) => {
     const rs = r.asString();
@@ -82,22 +84,22 @@ async function vote(url, type) {
   });
 }
 
-async function queryVotes(url) {
+async function queryVotes(id) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const upvote = `GET ${url}_upvote`;
-  const downvote = `GET ${url}_downvote`;
+  const upvote = `SCARD ${id}_upvote`;
+  const downvote = `SCARD ${id}_downvote`;
 
   const p1 = session.request(upvote).result().then((r) => {
     const rs = r.asString();
     return {
-      upvote: rs.split('\n')[1].trim() || '0'
+      upvote: rs.substr(1).trim()
     };
   });
 
   const p2 = session.request(downvote).result().then((r) => {
     const rs = r.asString();
     return {
-      downvote: rs.split('\n')[1].trim() || '0'
+      downvote: rs.substr(1).trim()
     };
   });
 
@@ -107,9 +109,38 @@ async function queryVotes(url) {
   }));
 }
 
+async function canVote(id) {
+  const session = await fluence.connect(contract, appId, ethereumUrl);
+  const upvote = `SISMEMBER ${id}_upvote ${getAuthor()}`;
+  const downvote = `SISMEMBER ${id}_downvote ${getAuthor()}`;
+
+  const p1 = session.request(upvote).result().then((r) => {
+    const rs = r.asString();
+    return {
+      upvote: rs.substr(1).trim()
+    };
+  });
+
+  const p2 = session.request(downvote).result().then((r) => {
+    const rs = r.asString();
+    return {
+      downvote: rs.substr(1).trim()
+    };
+  });
+
+  return Promise.all([p1, p2]).then((r) => {
+    const result = {
+      ...r[0],
+      ...r[1],
+    };
+    return !(result.upvote > 0 || result.downvote > 0);
+  });
+}
+
 export {
   createReview,
   queryReviews,
   vote,
   queryVotes,
+  canVote,
 };

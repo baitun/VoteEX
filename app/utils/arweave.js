@@ -101,6 +101,7 @@ async function queryReviews(url) {
 
         review.trusted = true;
         review.txId = tx.id;
+        review.id = tx.id;
       });
 
       return review;
