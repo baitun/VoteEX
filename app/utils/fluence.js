@@ -59,7 +59,48 @@ async function queryReviews(url) {
   });
 }
 
+async function vote(url, type) {
+  if (!(type === 'upvote' || type === 'downvote')) {
+    throw new Error('Invalid vote type');
+  }
+
+  const session = await fluence.connect(contract, appId, ethereumUrl);
+  const command = `INCR ${url}_${type}`;
+
+  return session.request(command).result().then((r) => {
+    const rs = r.asString();
+    return rs.substr(1).trim();
+  });
+}
+
+async function queryVotes(url) {
+  const session = await fluence.connect(contract, appId, ethereumUrl);
+  const upvote = `GET ${url}_upvote`;
+  const downvote = `GET ${url}_downvote`;
+
+  const p1 = session.request(upvote).result().then((r) => {
+    const rs = r.asString();
+    return {
+      upvote: rs.split('\n')[1].trim() || '0'
+    };
+  });
+
+  const p2 = session.request(downvote).result().then((r) => {
+    const rs = r.asString();
+    return {
+      downvote: rs.split('\n')[1].trim() || '0'
+    };
+  });
+
+  return Promise.all([p1, p2]).then(r => ({
+    ...r[0],
+    ...r[1],
+  }));
+}
+
 export {
   createReview,
   queryReviews,
+  vote,
+  queryVotes,
 };
