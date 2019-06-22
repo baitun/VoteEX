@@ -43,6 +43,7 @@ async function createReview(review) {
   tx.addTag('App-Name', 'Votics');
   tx.addTag('Votics-Rating', review.rating);
   tx.addTag('Votics-URL', review.url);
+  tx.addTag('Votics-Timestamp', new Date().getTime());
 
   await arweave.transactions.sign(tx, jwk);
 
@@ -80,6 +81,9 @@ async function queryReviews(url) {
         }
         if (key === 'Votics-URL') {
           review.url = value;
+        }
+        if (key === 'Votics-Timestamp') {
+          review.timestamp = value;
         }
       });
 
