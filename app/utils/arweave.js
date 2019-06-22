@@ -3,7 +3,8 @@ import defaultJwk from './example.json';
 
 const arweave = Arweave.init({
   host: 'arweave.net',
-  port: 1984
+  port: 443,
+  protocol: 'https',
 });
 
 let jwk = defaultJwk;
@@ -34,29 +35,18 @@ async function createReview(review) {
     throw new Error('URL is required');
   }
 
-  const key = await arweave.wallets.jwkToAddress(jwk);
+  const tx = await arweave.createTransaction({
+    data: review.text,
+  }, jwk);
 
-  const tx = arweave.createTransaction({
-    data: Buffer.from(review.text, 'utf-8'),
-    tags: [{
-      name: 'App-Name',
-      value: 'Votics'
-    },
-    {
-      name: 'Votics-Rating',
-      value: review.rating,
-    },
-    {
-      name: 'Votics-URL',
-      value: review.url,
-    },
-    {
-      name: 'Content-Type',
-      value: 'text/plain',
-    }]
-  });
+  tx.addTag('Content-Type', 'text/plain');
+  tx.addTag('App-Name', 'Votics');
+  tx.addTag('Votics-Rating', review.rating);
+  tx.addTag('Votics-URL', review.url);
 
-  await arweave.transactions.sign(tx, key);
+  await arweave.transactions.sign(tx, jwk);
+
+  console.log(`Sending transaction with id: ${tx.id}`);
   return arweave.transactions.post(tx);
 }
 
@@ -91,14 +81,13 @@ async function queryReviews(url) {
         if (key === 'Votics-URL') {
           review.url = value;
         }
-
-        return review;
       });
+
+      return review;
     });
 
     reviews.push(reviewPromise);
   });
-
 
   return Promise.all(reviews);
 }

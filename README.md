@@ -10,6 +10,8 @@ Default address is -uUlJ3b5YiY06C99aPBogOkxpECXMgkhm45ZugrdyHk
 Keyfile is loacated in keyfiles/example.json
 Passphrase is 12345678
 
+Tx example: http://arweave.net/tx/CMUFSPIakmNfjWXmWlAbRZxJCTX5c-lMVcCc8x-QZgc
+
 ## Fluence
 ETH address is 0x3B3AC9B65c2f9602865f0E6d8EEcD468920938f7
 
