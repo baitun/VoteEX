@@ -57,8 +57,27 @@ async function createReview(review) {
 
   await arweave.transactions.sign(tx, jwk);
 
-  console.log(`Sending transaction with id: ${tx.id}`);
-  return arweave.transactions.post(tx);
+  console.log(`Sending transaction with id: ${JSON.stringify(tx)}`);
+  return arweave.transactions.post(tx).then(rs => ({
+    ...rs,
+    txId: tx.id,
+  }));
+}
+
+async function waitForTxInternal(txId, resolve) {
+  const status = await arweave.transactions.getStatus(txId);
+
+  if (!status.confirmed) {
+    setTimeout(() => waitForTxInternal(txId, resolve), 500);
+  } else {
+    return resolve(status);
+  }
+}
+
+async function waitForTx(txId) {
+  return new Promise(async (resolve) => {
+    waitForTxInternal(txId, resolve);
+  });
 }
 
 /**
@@ -118,4 +137,5 @@ export {
   queryReviews,
   setJwk,
   getAuthor,
+  waitForTx,
 };
