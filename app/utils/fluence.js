@@ -24,7 +24,7 @@ async function createReview(review) {
   }
 
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `SADD '${review.url}' '${review.text}:${review.rating}'`;
+  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}'`;
   return session.request(command).result();
 }
 
@@ -48,7 +48,7 @@ async function queryReviews(url) {
 
         const reviewParts = part.split(':');
         reviews.push({
-          text: reviewParts[0],
+          text: decodeURI(reviewParts[0]),
           rating: reviewParts[1],
           url,
         });
