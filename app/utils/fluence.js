@@ -3,7 +3,7 @@ import * as fluence from 'fluence';
 import { getAuthor } from './arweave';
 
 const contract = '0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01';
-const appId = 252;
+const appId = 266;
 const ethereumUrl = 'http://geth.fluence.one:8545';
 
 /**
@@ -27,7 +27,7 @@ async function createReview(review) {
 
   const id = Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}':${getAuthor()}:${id}`;
+  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}:${getAuthor()}:${id}'`;
   return session.request(command).result();
 }
 
