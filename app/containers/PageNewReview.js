@@ -24,6 +24,7 @@ export class PageNewReview extends React.Component {
         url: host,
       })
       .then((response) => {
+        console.log(response);
         this.setState({ loading: false });
       });
   };

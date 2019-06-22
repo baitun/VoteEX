@@ -46,7 +46,7 @@ async function createReview(review) {
     data: review.text,
   }, jwk);
 
-  const key = getAuthor();
+  const key = await getAuthor();
 
   tx.addTag('Content-Type', 'text/plain');
   tx.addTag('App-Name', 'Votics');

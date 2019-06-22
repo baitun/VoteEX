@@ -19,5 +19,5 @@
     "page": "background.html"
   },
   "permissions": [ "contextMenus", "management", "tabs", "storage", "https://www.google.com/*" ],
-  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
+  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src https://arweave.net/arql http://134.209.59.207:25000/apps/266/query http://134.209.59.207:25000/apps/266/tx http://geth.fluence.one:8545/ http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
 }

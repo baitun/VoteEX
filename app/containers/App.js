@@ -6,6 +6,7 @@ import * as TodoActions from '../actions/todos';
 import { Reviews } from '../components/Reviews/Reviews';
 import { PageListReviews } from './PageListReviews';
 import { PageNewReview } from './PageNewReview';
+import { queryAggregate } from '../utils/aggregate';
 
 const PAGES = {
   NEW: 'PageNewReview',
@@ -35,6 +36,12 @@ export default class App extends Component {
   openPageList = () => {
     this.setState({ page: PAGES.LIST });
   };
+
+  componentDidMount(){
+    queryAggregate(this.props.host).then(response=>{
+      console.log(response)
+    })
+  }
 
   render() {
     const { todos, actions, host, rate, reviews } = this.props;

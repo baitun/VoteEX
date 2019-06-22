@@ -2,7 +2,7 @@ import * as arw from './arweave';
 import * as fls from './fluence';
 
 async function queryAggregate(url) {
-  Promise.all([
+  return Promise.all([
     arw.queryReviews(url),
     fls.queryReviews(url)
   ]).then((result) => {

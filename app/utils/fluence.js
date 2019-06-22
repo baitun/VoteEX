@@ -27,7 +27,7 @@ async function createReview(review) {
 
   const id = Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}:${getAuthor()}:${id}'`;
+  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}:${await getAuthor()}:${id}'`;
   return session.request(command).result();
 }
 
@@ -76,7 +76,7 @@ async function vote(id, type) {
   }
 
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `SADD ${id}_${type} ${getAuthor()}`;
+  const command = `SADD ${id}_${type} ${await getAuthor()}`;
 
   return session.request(command).result().then((r) => {
     const rs = r.asString();
@@ -111,8 +111,8 @@ async function queryVotes(id) {
 
 async function canVote(id) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const upvote = `SISMEMBER ${id}_upvote ${getAuthor()}`;
-  const downvote = `SISMEMBER ${id}_downvote ${getAuthor()}`;
+  const upvote = `SISMEMBER ${id}_upvote ${await getAuthor()}`;
+  const downvote = `SISMEMBER ${id}_downvote ${await getAuthor()}`;
 
   const p1 = session.request(upvote).result().then((r) => {
     const rs = r.asString();
