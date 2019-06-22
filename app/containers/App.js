@@ -2,8 +2,8 @@ import React, { Component, PropTypes } from "react";
 import { bindActionCreators } from "redux";
 import { connect } from "react-redux";
 import * as TodoActions from "../actions/todos";
-import style from "./App.css";
-import { StarRate } from "../components/StarRate/StarRate";
+
+import { Button, Row, Col, Rate } from "antd";
 
 @connect(
   state => ({
@@ -23,10 +23,10 @@ export default class App extends Component {
     const { todos, actions } = this.props;
 
     return (
-      <div className={style.normal}>
-        <h1>Comments for this site</h1>
-        <StarRate />
-        <textarea />
+      <div>
+        <h1>Commets for this site</h1>
+        Rate this site:
+        <Rate />
       </div>
     );
   }
