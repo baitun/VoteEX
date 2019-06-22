@@ -85,6 +85,9 @@ async function queryReviews(url) {
         if (key === 'Votics-Timestamp') {
           review.timestamp = value;
         }
+
+        review.trusted = true;
+        review.txId = tx.id;
       });
 
       return review;
