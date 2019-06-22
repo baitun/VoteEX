@@ -4,9 +4,7 @@ import { Review } from './Review/Review';
 export const Reviews = ({ reviews, host }) => {
   return (
     <div>
-      <h3>
-        Reviews for <b>{host}</b>:
-      </h3>
+      <h3>{reviews.length} reviews</h3>
       {reviews.map((review, i) => (
         <Review key={i} review={review} />
       ))}
