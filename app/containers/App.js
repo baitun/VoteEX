@@ -4,6 +4,13 @@ import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as TodoActions from '../actions/todos';
 import { Reviews } from '../components/Reviews/Reviews';
+import { PageListReviews } from './PageListReviews';
+import { PageNewReview } from './PageNewReview';
+
+const PAGES = {
+  NEW: 'PageNewReview',
+  LIST: 'PageListReviews',
+};
 
 @connect(
   (state) => ({
@@ -17,8 +24,21 @@ import { Reviews } from '../components/Reviews/Reviews';
   })
 )
 export default class App extends Component {
+  state = {
+    page: PAGES.NEW,
+  };
+
+  openPageNew = () => {
+    this.setState({ page: PAGES.NEW });
+  };
+
+  openPageList = () => {
+    this.setState({ page: PAGES.LIST });
+  };
+
   render() {
     const { todos, actions, host, rate, reviews } = this.props;
+    const { page } = this.state;
 
     return (
       <div>
@@ -39,13 +59,11 @@ export default class App extends Component {
           <Rate disabled allowHalf value={rate} />
         </header>
 
-        <div style={{ textAlign: 'center', marginTop: 8 }}>
-          <Button size="large">Rate this site</Button>
-        </div>
-
-        <section style={{ padding: 10 }}>
-          <Reviews reviews={reviews} host={host} />
-        </section>
+        {page === PAGES.LIST ? (
+          <PageListReviews reviews={reviews} onOpenPageNew={this.openPageNew} />
+        ) : page === PAGES.NEW ? (
+          <PageNewReview host={host} onOpenPageList={this.openPageList} />
+        ) : null}
 
         <BackTop />
 
