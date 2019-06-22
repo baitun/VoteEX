@@ -1,8 +1,8 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
-import style from './TodoTextInput.css';
+import style from './CommentTextInput.css';
 
-export default class TodoTextInput extends Component {
+export default class CommentTextInput extends Component {
 
   static propTypes = {
     onSave: PropTypes.func.isRequired,

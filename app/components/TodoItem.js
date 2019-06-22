@@ -1,6 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import classnames from 'classnames';
-import TodoTextInput from './TodoTextInput';
+import CommentTextInput from './CommentTextInput/CommentTextInput';
 import style from './TodoItem.css';
 
 export default class TodoItem extends Component {
@@ -49,7 +49,7 @@ export default class TodoItem extends Component {
     let element;
     if (this.state.editing) {
       element = (
-        <TodoTextInput
+        <CommentTextInput
           text={todo.text}
           editing={this.state.editing}
           onSave={this.handleSave}
