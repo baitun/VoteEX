@@ -18,6 +18,13 @@ function setJwk(newJwk) {
 }
 
 /**
+ * Returns current active user public key
+ */
+async function getAuthor() {
+  return await arweave.wallets.jwkToAddress(jwk);
+}
+
+/**
  * Creates new review using arweave
  *
  * @param {Review. Must contain fields text, rating (int 1 - 5), url} review
@@ -39,11 +46,14 @@ async function createReview(review) {
     data: review.text,
   }, jwk);
 
+  const key = getAuthor();
+
   tx.addTag('Content-Type', 'text/plain');
   tx.addTag('App-Name', 'Votics');
   tx.addTag('Votics-Rating', review.rating);
   tx.addTag('Votics-URL', review.url);
   tx.addTag('Votics-Timestamp', new Date().getTime());
+  tx.addTag('Votics-Author', key);
 
   await arweave.transactions.sign(tx, jwk);
 
@@ -85,6 +95,9 @@ async function queryReviews(url) {
         if (key === 'Votics-Timestamp') {
           review.timestamp = value;
         }
+        if (key === 'Votics-Author') {
+          review.author = value;
+        }
 
         review.trusted = true;
         review.txId = tx.id;
@@ -103,4 +116,5 @@ export {
   createReview,
   queryReviews,
   setJwk,
+  getAuthor,
 };

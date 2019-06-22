@@ -1,5 +1,7 @@
 import * as fluence from 'fluence';
 
+import { getAuthor } from './arweave';
+
 const contract = '0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01';
 const appId = 252;
 const ethereumUrl = 'http://geth.fluence.one:8545';
@@ -24,7 +26,7 @@ async function createReview(review) {
   }
 
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}'`;
+  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}':${getAuthor()}`;
   return session.request(command).result();
 }
 
@@ -51,6 +53,7 @@ async function queryReviews(url) {
           text: decodeURI(reviewParts[0]),
           rating: reviewParts[1],
           timestamp: reviewParts[2],
+          author: reviewParts[3],
           url,
         });
       }
@@ -59,6 +62,12 @@ async function queryReviews(url) {
   });
 }
 
+/**
+ * Leaves vote for review
+ *
+ * @param {URL to vote for} url
+ * @param {type of vote, either 'upvote' or 'downvote'} type
+ */
 async function vote(url, type) {
   if (!(type === 'upvote' || type === 'downvote')) {
     throw new Error('Invalid vote type');
