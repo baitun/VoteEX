@@ -1,10 +1,10 @@
 import React from 'react';
 import { Icon, Rate, Button } from 'antd';
 import moment from 'moment';
-import { vote } from '../../../utils/fluence';
 
-export const Review = ({ post, onVoteClick }) => {  
-  if(post.text.length===0) return null;
+export const Review = ({ post, onVoteClick }) => {
+  if (!post) return null;
+  if (post.text.length === 0) return null;
   return (
     <div className="ant-card ant-card-bordered" style={{ marginBottom: 5 }}>
       <div className="ant-card-head">
@@ -14,11 +14,16 @@ export const Review = ({ post, onVoteClick }) => {
               {moment(parseInt(post.timestamp)).format('LLL')}
               &nbsp;
               {post.trusted && (
-                <a target="_blank" href={`https://viewblock.io/arweave/tx/${post.id}`}><Icon
-                type="safety-certificate"
-                style={{ color: '#52c41a' }}
-                title="This review is trusted"
-              /></a>
+                <a
+                  target="_blank"
+                  href={`https://viewblock.io/arweave/tx/${post.id}`}
+                >
+                  <Icon
+                    type="safety-certificate"
+                    style={{ color: '#52c41a' }}
+                    title="This review is trusted"
+                  />
+                </a>
               )}
             </div>
           </div>
@@ -30,12 +35,26 @@ export const Review = ({ post, onVoteClick }) => {
       <div className="ant-card-body" style={{ padding: '5px 24px 0' }}>
         <p>{post.text}</p>
         <p
-          style={{ textAlign: 'right', marginBottom: 4 }}
-          title="Review rating"
+          style={{
+            textAlign: 'right',
+            marginBottom: 4,
+            opacity: (post.upvote === undefined || post.downvote === undefined)?0:1,
+          }}
         >
-          <Button onClick={()=>onVoteClick(post.id, "upvote")}  type="link"><Icon type="like" style={{color: '#52c41a'}}  /> {post.upvote}</Button>
-          <Button onClick={()=>onVoteClick(post.id, "downvote")} type="link"><Icon type="dislike" style={{color: '#eb2f96'}}  /> {post.downvote}</Button>
-          
+          <Button
+            onClick={() => onVoteClick(post.id, 'upvote')}
+            title="Upvote this review"
+            type="link"
+          >
+            <Icon type="like" style={{ color: '#52c41a' }} /> {post.upvote}
+          </Button>
+          <Button
+            onClick={() => onVoteClick(post.id, 'downvote')}
+            title="Downvote this review"
+            type="link"
+          >
+            <Icon type="dislike" style={{ color: '#eb2f96' }} /> {post.downvote}
+          </Button>
         </p>
       </div>
     </div>
