@@ -30,9 +30,20 @@ function loadScript(name, tabId, cb) {
   }
 }
 
-const arrowURLs = ['^https://github\\.com'];
+const arrowURLs = ['^https://www\\.google\\.com'];
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+
+  if (changeInfo.status !== 'loading') {
+
+    const host = new URL(tab.url).host;
+    const aggregate = require('../../../app/utils/aggregate');
+
+    aggregate.queryAggregate(host).then(result => {
+      chrome.browserAction.setBadgeText({ text: result.count });
+    });
+  }
+
   if (changeInfo.status !== 'loading' || !tab.url.match(arrowURLs.join('|'))) return;
 
   const result = await isInjected(tabId);

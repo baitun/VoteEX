@@ -1,13 +1,14 @@
-chrome.storage.local.get('todos', (obj) => {
-  let todos = obj.todos;
-  if (todos) {
-    todos = JSON.parse(todos);
-    const len = todos.filter(todo => !todo.marked).length;
-    if (len > 0) {
-      chrome.browserAction.setBadgeText({ text: len.toString() });
-    }
-  } else {
-    // Initial
-    chrome.browserAction.setBadgeText({ text: '1' });
-  }
+chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
+  const host = new URL(tab.url).host;
+  const aggregate = require('../../../app/utils/aggregate');
+
+  chrome.browserAction.setBadgeText({ text: '?' });
+  aggregate.queryAggregate(host).then(result => {
+    chrome.browserAction.setBadgeText({ text: `${result.count}` });
+
+    const val = {};
+    val.key = `${host}-reviews`;
+    val.value = result;
+    chrome.storage.local.set(val);
+  });
 });

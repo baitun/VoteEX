@@ -9,7 +9,6 @@ function setBadge(todos) {
     chrome.browserAction.setBadgeText({
       text: count > 0 ? count.toString() : '',
     });
-    // chrome.browserAction.setBadgeText({ text: 'Х' });
   }
 }
 
