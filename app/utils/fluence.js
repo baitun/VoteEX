@@ -3,7 +3,7 @@ import * as fluence from 'fluence';
 import { getAuthor } from './arweave';
 
 const contract = '0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01';
-const appId = 266;
+const appId = 270;
 const ethereumUrl = 'http://geth.fluence.one:8545';
 
 /**
