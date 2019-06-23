@@ -1,7 +1,7 @@
 {
-  "name": "react-chrome-extension-boilerplate",
-  "version": "0.9.0",
-  "description": "Boilerplate for Chrome extension React.js project",
+  "name": "voteex",
+  "version": "0.1.0",
+  "description": "VoteEX - Website reputation and review service.",
   "scripts": {
     "dev": "node scripts/dev",
     "build": "node scripts/build",
@@ -14,7 +14,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/jhen0409/react-chrome-extension-boilerplate.git"
+    "url": "https://github.com/baitun/web3hack.git"
   },
   "keywords": [
     "chrome",
@@ -25,7 +25,6 @@
     "webpack",
     "boilerplate"
   ],
-  "author": "Jhen <developer@jhen.me>",
   "license": "MIT",
   "devDependencies": {
     "babel-core": "^6.3.15",
