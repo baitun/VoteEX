@@ -28,7 +28,7 @@ export default class App extends Component {
     posts: [],
     loading: false,
     average: 'NO',
-    host: undefined
+    host: undefined,
   };
 
   openPageNew = () => {
@@ -39,77 +39,75 @@ export default class App extends Component {
     this.setState({ page: PAGES.LIST });
   };
 
-  addNewPost = (newPost, advanced=false)=>{
-    console.log('[addNewPost]', {newPost, advanced})
+  addNewPost = (newPost, advanced = false) => {
+    console.log('[addNewPost]', { newPost, advanced });
     const newPosts = [newPost, ...this.state.posts];
-    this.setState({page: PAGES.LIST, posts: newPosts});
-  }
+    this.setState({ page: PAGES.LIST, posts: newPosts });
+  };
 
-  handleVoteClick = async (id, type)=>{
+  handleVoteClick = async (id, type) => {
     // positive adding likes
-    const posts = this.state.posts.map(post=>{
-      if(post.id===id){
-        if(type==="upvote"){
-          return {...post, upvote: parseInt(post.upvote)+1}
+    const posts = this.state.posts.map((post) => {
+      if (post.id === id) {
+        if (type === 'upvote') {
+          return { ...post, upvote: parseInt(post.upvote) + 1 };
         } else {
-          return {...post, downvote: parseInt(post.downvote)+1}
+          return { ...post, downvote: parseInt(post.downvote) + 1 };
         }
       } else {
-        return post
+        return post;
       }
-    })
-    this.setState({posts})
+    });
+    this.setState({ posts });
 
-    vote(id, type).then(newNumber=>{
-      const posts = this.state.posts.map((post)=>{
-        if(post.id===id) {
-          if(type==="upvote"){
-            return {...post, upvote: newNumber}
+    vote(id, type).then((newNumber) => {
+      const posts = this.state.posts.map((post) => {
+        if (post.id === id) {
+          if (type === 'upvote') {
+            return { ...post, upvote: newNumber };
           } else {
-            return {...post, downvote: newNumber}
+            return { ...post, downvote: newNumber };
           }
         } else {
           return post;
         }
-      })
-      console.log('newPosts after load new likes', posts)
-      this.setState({posts: posts})
-    })
-  }
+      });
+      console.log('newPosts after load new likes', posts);
+      this.setState({ posts: posts });
+    });
+  };
 
-  loadLikes = async (posts)=>{
+  loadLikes = async (posts) => {
     let promises = [];
-    for(let i=0;i<posts.length; i++) {
-      const post=posts[i];
+    for (let i = 0; i < posts.length; i++) {
+      const post = posts[i];
       promises.push(queryVotes(post.id));
     }
 
-    Promise.all(promises).then(values=>{
-      const newPosts = values.map((v,i)=>{
+    Promise.all(promises).then((values) => {
+      const newPosts = values.map((v, i) => {
         return {
           ...posts[i],
-          ...v
-        }
-      })
-      this.setState({posts:newPosts})
-    })
+          ...v,
+        };
+      });
+      this.setState({ posts: newPosts });
+    });
+  };
 
-  }
-
-  loadReviews = (host)=>{
-    this.setState({loading: true})
-    queryAggregate(host).then(response=>{
-      console.log('[loadReviews->queryAggregate]', {response})
-      this.setState({posts: response.posts, loading: false})
+  loadReviews = (host) => {
+    this.setState({ loading: true });
+    queryAggregate(host).then((response) => {
+      console.log('[loadReviews->queryAggregate]', { response });
+      this.setState({ posts: response.posts, loading: false });
       this.loadLikes(response.posts);
-    })
-  }
+    });
+  };
 
-  componentDidMount(){
-    
-    chrome.tabs.query({'active': true, 'lastFocusedWindow': true},  (tabs)=> {
-      const host =   new URL(tabs[0].url).host;
-      this.setState({host})
+  componentDidMount() {
+    chrome.tabs.query({ active: true, lastFocusedWindow: true }, (tabs) => {
+      const host = new URL(tabs[0].url).host;
+      this.setState({ host });
       this.loadReviews(host);
     });
   }
@@ -118,9 +116,11 @@ export default class App extends Component {
     // const { todos, actions, host } = this.props;
     const { page, posts, host, loading } = this.state;
 
-    const average = posts.reduce((acc, post) => acc + parseFloat(post.rating), 0) / posts.length;
+    const average =
+      posts.reduce((acc, post) => acc + parseFloat(post.rating), 0) /
+      posts.length;
 
-    if(host===undefined) return null;
+    if (host === undefined) return null;
 
     return (
       <div>
@@ -137,14 +137,25 @@ export default class App extends Component {
         >
           <h1>{host}</h1>
           <h4>Reputation</h4>
-          <div style={{ fontSize: 60, lineHeight: '1' }}>{average?average.toFixed(1):'NO'}</div>
+          <div style={{ fontSize: 60, lineHeight: '1' }}>
+            {average ? average.toFixed(1) : 'NO'}
+          </div>
           <Rate disabled allowHalf value={average} />
         </header>
 
         {page === PAGES.LIST ? (
-          <PageListReviews posts={posts} loading={loading} onVoteClick={this.handleVoteClick} onOpenPageNew={this.openPageNew} />
+          <PageListReviews
+            posts={posts}
+            loading={loading}
+            onVoteClick={this.handleVoteClick}
+            onOpenPageNew={this.openPageNew}
+          />
         ) : page === PAGES.NEW ? (
-          <PageNewReview host={host} onOpenPageList={this.openPageList} addNewPost={this.addNewPost} />
+          <PageNewReview
+            host={host}
+            onOpenPageList={this.openPageList}
+            addNewPost={this.addNewPost}
+          />
         ) : null}
 
         <BackTop />
