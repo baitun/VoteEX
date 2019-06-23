@@ -29,9 +29,7 @@ chrome.contextMenus.create({
   id: CONTEXT_MENU_ID,
   title: 'React Chrome Extension Example',
   contexts: ['all'],
-  documentUrlPatterns: [
-    'https://github.com/*'
-  ]
+  documentUrlPatterns: ['https://www.google.com/*'],
 });
 
 chrome.contextMenus.onClicked.addListener((event) => {
