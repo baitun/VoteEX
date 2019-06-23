@@ -3,7 +3,7 @@ import * as fluence from 'fluence';
 import { getAuthor } from './arweave';
 
 const contract = '0xeFF91455de6D4CF57C141bD8bF819E5f873c1A01';
-const appId = 270;
+const appId = 272;
 const ethereumUrl = 'http://geth.fluence.one:8545';
 
 /**
@@ -26,7 +26,8 @@ async function createReview(review) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
   const timestamp = new Date().getTime();
   const author = await getAuthor();
-  const command = `SADD '${review.url}' '${encodeURI(review.text||'')}:${review.rating}:${timestamp}:${await getAuthor()}:${id}'`;
+  const command = `SADD '${review.url}' '${encodeURI(review.text||'').replace("'", '%ZZZ')}:${review.rating}:${timestamp}:${await getAuthor()}:${id}'`;
+  console.log(command);
   return session.request(command).result().then(rs => {
     return {
       id,
@@ -45,7 +46,7 @@ async function createReview(review) {
 async function queryReviews(url) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
   const command = `SMEMBERS ${url}`;
-
+  console.log(command);
   return session.request(command).result().then((r) => {
     const reviews = [];
     const str = r.asString();
@@ -57,7 +58,7 @@ async function queryReviews(url) {
 
         const reviewParts = part.split(':');
         reviews.push({
-          text: reviewParts[0] !== '0' ? decodeURI(reviewParts[0]) : '',
+          text: reviewParts[0] !== '0' ? decodeURI(reviewParts[0]).replace('%ZZZ', "'") : '',
           rating: reviewParts[1],
           timestamp: reviewParts[2],
           author: reviewParts[3],
