@@ -29,7 +29,6 @@ export class PageNewReview extends React.Component {
     lib
       .createReview(newPost)
       .then((post) => {
-        console.log({newPost: post});
         this.setState({ loading: false });
         this.props.addNewPost(post, advanced)
       });
@@ -38,7 +37,6 @@ export class PageNewReview extends React.Component {
   render() {
     const { host, onOpenPageList } = this.props;
     const { rate, comment, advanced } = this.state;
-    console.log(this.state);
     return (
       <div>
         <div>
