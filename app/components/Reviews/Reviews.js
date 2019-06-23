@@ -1,14 +1,18 @@
 import React from 'react';
 import { Review } from './Review/Review';
-import {Spin } from 'antd'
+import { Spin } from 'antd';
 
 export const Reviews = ({ posts, onVoteClick, loading }) => {
-  
-  if(loading) return <div style={{textAlign: "center"}}><Spin/></div>
+  if (loading)
+    return (
+      <div style={{ textAlign: 'center' }}>
+        <Spin />
+      </div>
+    );
 
   return (
     <div>
-      <h3>{posts.length} reviews</h3>
+      <h3>{posts.length} votes</h3>
       {posts.map((post, i) => (
         <Review key={i} post={post} onVoteClick={onVoteClick} />
       ))}
