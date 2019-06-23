@@ -1,18 +1,18 @@
 const aggregate = require('../../app/utils/aggregate');
 
 window.addEventListener('load', () => {
+  let hosts = [];
   document.querySelectorAll('.srg .r>a').forEach((googleItem) => {
     const host = new URL(googleItem.href).host;
 
-    // aggregate.queryAggregate(host).then((res) => {
-    //   console.log(res);
-    // });
-
-    const text = `[${host} votes]`;
-
-    const span = document.createElement('span');
-    span.innerText = text;
-    googleItem.appendChild(span);
+    chrome.runtime.sendMessage({ method: 'test', host }, function(response) {
+      console.log(response);
+      const posts = response.posts;
+      const text = `[${posts.length} votes]`;
+      const span = document.createElement('span');
+      span.innerText = text;
+      googleItem.appendChild(span);
+    });
   });
 
   // (async function() {
