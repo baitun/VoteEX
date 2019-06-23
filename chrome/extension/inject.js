@@ -10,13 +10,18 @@ window.addEventListener('load', () => {
         const average =
           posts.reduce((acc, post) => acc + parseFloat(post.rating), 0) /
           posts.length;
-        const text = `[${posts.length} votes, avg. rate ${
+        const text = `${posts.length} votes, avg. rate ${
           posts.length > 0 ? average.toFixed(1) : 'NO'
-        }]`;
-        const span = document.createElement('span');
-        span.title = text;
-        span.innerHTML = posts.length === 0 ? '❓' : average > 3 ? '👍' : '👎';
-        h3.appendChild(span);
+        }`;
+        const img = document.createElement('img');
+        img.title = text;
+        const image =
+          posts.length === 0 ? 'unknown' : average > 3 ? 'good' : 'bad';
+        img.src = chrome.runtime.getURL(`img/${image}.png`);
+        img.style.width = '20px';
+        img.style.marginLeft = '5px';
+        console.log(img.src);
+        h3.appendChild(img);
       });
     }
   });
