@@ -57,7 +57,7 @@ async function queryReviews(url) {
 
         const reviewParts = part.split(':');
         reviews.push({
-          text: decodeURI(reviewParts[0]),
+          text: reviewParts[0] !== '0' ? decodeURI(reviewParts[0]) : '',
           rating: reviewParts[1],
           timestamp: reviewParts[2],
           author: reviewParts[3],
