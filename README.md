@@ -1,4 +1,13 @@
-# Site reviews Chrome extension
+# Blockchain-based site reviews Chrome extension
+
+This project is part of [Decentralized Web Hackathon](https://web3hack.dev/), sponsored by [fluence](http://fluence.network/) and [arweave](http://arweave.org/) (Jun 22-23 2019, Minsk, Belarus).
+
+Members of our team [EasyChain](https://easychain.tech/):
+
+- [Denis](https://github.com/execc)
+- [Julia](https://github.com/JulyElektra)
+- [Andrey](https://github.com/AndreKuren)
+- [Yury](https://github.com/baitun)
 
 ## How to run
 
@@ -17,7 +26,7 @@ $ npm run dev
 ```bash
 # compress build folder to {manifest.name}.zip and crx
 $ npm run build
-$ npm run compress -- [options]
+$ npm run compress
 ```
 
 ## Build with

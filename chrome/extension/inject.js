@@ -1,48 +1,23 @@
-import React, { Component } from 'react';
-import { render } from 'react-dom';
-import Dock from 'react-dock';
-
-class InjectApp extends Component {
-  constructor(props) {
-    super(props);
-    this.state = { isVisible: false };
-  }
-
-  buttonOnClick = () => {
-    this.setState({ isVisible: !this.state.isVisible });
-  };
-
-  render() {
-    return (
-      <div>
-        <button onClick={this.buttonOnClick}>
-          Open TodoApp
-        </button>
-        <Dock
-          position="right"
-          dimMode="transparent"
-          defaultSize={0.4}
-          isVisible={this.state.isVisible}
-        >
-          <iframe
-            style={{
-              width: '100%',
-              height: '100%',
-            }}
-            frameBorder={0}
-            allowTransparency="true"
-            src={chrome.extension.getURL(`inject.html?protocol=${location.protocol}`)}
-          />
-        </Dock>
-      </div>
-    );
-  }
-}
-
 window.addEventListener('load', () => {
-  const injectDOM = document.createElement('div');
-  injectDOM.className = 'inject-react-example';
-  injectDOM.style.textAlign = 'center';
-  document.body.appendChild(injectDOM);
-  render(<InjectApp />, injectDOM);
+  document.querySelectorAll('#rso .r').forEach((googleRow) => {
+    const h3 = googleRow.querySelector('h3');
+    const a = googleRow.querySelector('a');
+    const host = new URL(a.href).host;
+    if (h3) {
+      chrome.runtime.sendMessage({ method: 'test', host }, function(response) {
+        console.log(response);
+        const posts = response.posts;
+        const average =
+          posts.reduce((acc, post) => acc + parseFloat(post.rating), 0) /
+          posts.length;
+        const text = `[${posts.length} votes, avg. rate ${
+          posts.length > 0 ? average.toFixed(1) : 'NO'
+        }]`;
+        const span = document.createElement('span');
+        span.title = text;
+        span.innerHTML = posts.length === 0 ? '❓' : average > 3 ? '👍' : '👎';
+        h3.appendChild(span);
+      });
+    }
+  });
 });
