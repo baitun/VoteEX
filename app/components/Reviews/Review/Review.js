@@ -4,6 +4,7 @@ import moment from 'moment';
 
 export const Review = ({ post, onVoteClick }) => {
   if (!post) return null;
+  if(!post.text) return null;
   if (post.text.length === 0) return null;
   return (
     <div className="ant-card ant-card-bordered" style={{ marginBottom: 5 }}>

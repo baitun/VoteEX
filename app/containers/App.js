@@ -46,16 +46,34 @@ export default class App extends Component {
   }
 
   handleVoteClick = async (id, type)=>{
-    vote(id, type).then(res=>{
-      const newPosts = this.state.posts.map(async (p)=>{
-        if(p.id===id) {
-          const likes = await queryVotes(id);
-          return {...p, ...likes}
+    // positive adding likes
+    const posts = this.state.posts.map(post=>{
+      if(post.id===id){
+        if(type==="upvote"){
+          return {...post, upvote: parseInt(post.upvote)+1}
         } else {
-          return p;
+          return {...post, downvote: parseInt(post.downvote)+1}
+        }
+      } else {
+        return post
+      }
+    })
+    this.setState({posts})
+
+    vote(id, type).then(newNumber=>{
+      const posts = this.state.posts.map((post)=>{
+        if(post.id===id) {
+          if(type==="upvote"){
+            return {...post, upvote: newNumber}
+          } else {
+            return {...post, downvote: newNumber}
+          }
+        } else {
+          return post;
         }
       })
-      this.setState({posts: newPosts})
+      console.log('newPosts after load new likes', posts)
+      this.setState({posts: posts})
     })
   }
 
@@ -81,7 +99,7 @@ export default class App extends Component {
   loadReviews = (host)=>{
     this.setState({loading: true})
     queryAggregate(host).then(response=>{
-      console.log(response)
+      console.log('[loadReviews->queryAggregate]', {response})
       this.setState({posts: response.posts, loading: false})
       this.loadLikes(response.posts);
     })
