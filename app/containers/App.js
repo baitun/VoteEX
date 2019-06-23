@@ -27,7 +27,7 @@ export default class App extends Component {
     page: PAGES.LIST,
     posts: [],
     loading: false,
-    average: 0,
+    average: 'NO',
     host: undefined
   };
 
@@ -82,7 +82,7 @@ export default class App extends Component {
     this.setState({loading: true})
     queryAggregate(host).then(response=>{
       console.log(response)
-      this.setState({posts: response.posts, average: response.average, loading: false})
+      this.setState({posts: response.posts, loading: false})
       this.loadLikes(response.posts);
     })
   }
@@ -98,7 +98,9 @@ export default class App extends Component {
 
   render() {
     // const { todos, actions, host } = this.props;
-    const { page, posts, average, host, loading } = this.state;
+    const { page, posts, host, loading } = this.state;
+
+    const average = posts.reduce((acc, post) => acc + parseFloat(post.rating), 0) / posts.length;
 
     if(host===undefined) return null;
 

@@ -4,6 +4,7 @@ import moment from 'moment';
 import { vote } from '../../../utils/fluence';
 
 export const Review = ({ post, onVoteClick }) => {  
+  if(post.text.length===0) return null;
   return (
     <div className="ant-card ant-card-bordered" style={{ marginBottom: 5 }}>
       <div className="ant-card-head">
@@ -13,11 +14,11 @@ export const Review = ({ post, onVoteClick }) => {
               {moment(parseInt(post.timestamp)).format('LLL')}
               &nbsp;
               {post.trusted && (
-                <Icon
-                  type="safety-certificate"
-                  style={{ color: '#52c41a' }}
-                  title="This review is trusted"
-                />
+                <a target="_blank" href={`https://viewblock.io/arweave/tx/${post.id}`}><Icon
+                type="safety-certificate"
+                style={{ color: '#52c41a' }}
+                title="This review is trusted"
+              /></a>
               )}
             </div>
           </div>

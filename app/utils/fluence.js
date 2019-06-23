@@ -13,10 +13,7 @@ const ethereumUrl = 'http://geth.fluence.one:8545';
  * @param {Review. Must contain fields text, rating (int 1 - 5), url} review
  */
 async function createReview(review) {
-  if (!review.text) {
-    throw new Error('Text is required');
-  }
-
+  
   if (!review.rating) {
     throw new Error('Rating is required');
   }
@@ -29,7 +26,7 @@ async function createReview(review) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
   const timestamp = new Date().getTime();
   const author = await getAuthor();
-  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${timestamp}:${await getAuthor()}:${id}'`;
+  const command = `SADD '${review.url}' '${encodeURI(review.text|'')}:${review.rating}:${timestamp}:${await getAuthor()}:${id}'`;
   return session.request(command).result().then(rs => {
     return {
       id,
