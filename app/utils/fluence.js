@@ -26,7 +26,7 @@ async function createReview(review) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
   const timestamp = new Date().getTime();
   const author = await getAuthor();
-  const command = `SADD '${review.url}' '${encodeURI(review.text|'')}:${review.rating}:${timestamp}:${await getAuthor()}:${id}'`;
+  const command = `SADD '${review.url}' '${encodeURI(review.text||'')}:${review.rating}:${timestamp}:${await getAuthor()}:${id}'`;
   return session.request(command).result().then(rs => {
     return {
       id,
