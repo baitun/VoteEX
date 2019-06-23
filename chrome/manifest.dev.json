@@ -12,12 +12,16 @@
     "48": "img/icon-48.png",
     "128": "img/icon-128.png"
   },
-  "web_accessible_resources": [
-    "inject.html"
-  ],
+  "web_accessible_resources": ["inject.html"],
   "background": {
     "page": "background.html"
   },
-  "permissions": [ "contextMenus", "management", "tabs", "storage", "https://www.google.com/*" ],
-  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://159.65.110.2:25000 http://165.22.142.184:25000 http://165.22.142.185:25000 https://arweave.net http://134.209.59.207:25000 http://134.209.59.207:25000 http://geth.fluence.one:8545 http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
+  "permissions": [
+    "contextMenus",
+    "management",
+    "tabs",
+    "storage",
+    "https://www.google.com/*"
+  ],
+  "content_security_policy": "default-src 'self'; script-src 'self' http://localhost:3000 https://localhost:3000 'unsafe-eval'; connect-src http://139.59.198.13:25000 http://188.166.192.197:25000 http://207.154.232.92:25000 http://207.154.240.52:25000 http://159.65.110.2:25000 http://165.22.142.184:25000 http://165.22.142.185:25000 https://arweave.net http://134.209.59.207:25000 http://134.209.59.207:25000 http://geth.fluence.one:8545 http://localhost:3000 https://localhost:3000; style-src * 'unsafe-inline' 'self' blob:; img-src 'self' data:;"
 }
