@@ -15,10 +15,7 @@ const PAGES = {
 
 @connect(
   (state) => ({
-    todos: state.todos,
     host: 'aviasales.ru',
-    rate: 4.5,
-    reviews: require('./mock_reviews'),
   }),
   (dispatch) => ({
     actions: bindActionCreators(TodoActions, dispatch),
@@ -26,7 +23,10 @@ const PAGES = {
 )
 export default class App extends Component {
   state = {
-    page: PAGES.NEW,
+    page: PAGES.LIST,
+    posts: [],
+    loading: false,
+    average: 0
   };
 
   openPageNew = () => {
@@ -37,15 +37,21 @@ export default class App extends Component {
     this.setState({ page: PAGES.LIST });
   };
 
-  componentDidMount(){
+  loadReviews = ()=>{
+    this.setState({loading: true})
     queryAggregate(this.props.host).then(response=>{
       console.log(response)
+      this.setState({posts: response.posts, average: response.average, loading: false})
     })
   }
 
+  componentDidMount(){
+    this.loadReviews();
+  }
+
   render() {
-    const { todos, actions, host, rate, reviews } = this.props;
-    const { page } = this.state;
+    const { todos, actions, host } = this.props;
+    const { page, posts, average } = this.state;
 
     return (
       <div>
@@ -62,12 +68,12 @@ export default class App extends Component {
         >
           <h1>{host}</h1>
           <h4>Reputation</h4>
-          <div style={{ fontSize: 60, lineHeight: '1' }}>{rate}</div>
-          <Rate disabled allowHalf value={rate} />
+          <div style={{ fontSize: 60, lineHeight: '1' }}>{average.toFixed(1)}</div>
+          <Rate disabled allowHalf value={average} />
         </header>
 
         {page === PAGES.LIST ? (
-          <PageListReviews reviews={reviews} onOpenPageNew={this.openPageNew} />
+          <PageListReviews posts={posts} onOpenPageNew={this.openPageNew} />
         ) : page === PAGES.NEW ? (
           <PageNewReview host={host} onOpenPageList={this.openPageList} />
         ) : null}

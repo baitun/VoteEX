@@ -1,8 +1,8 @@
 import React from 'react';
-import { Button } from 'antd';
+import { Button, Spin } from 'antd';
 import { Reviews } from '../components/Reviews/Reviews';
 
-export const PageListReviews = ({ reviews, onOpenPageNew }) => {
+export const PageListReviews = ({ posts, onOpenPageNew }) => {
   return (
     <div>
       <div style={{ textAlign: 'center', marginTop: 8 }}>
@@ -12,7 +12,7 @@ export const PageListReviews = ({ reviews, onOpenPageNew }) => {
       </div>
 
       <section style={{ padding: 10 }}>
-        <Reviews reviews={reviews} />
+        <Reviews posts={posts} />
       </section>
     </div>
   );

@@ -2,16 +2,16 @@ import React from 'react';
 import { Icon, Rate } from 'antd';
 import moment from 'moment';
 
-export const Review = ({ review }) => {
+export const Review = ({ post }) => {
   return (
     <div className="ant-card ant-card-bordered" style={{ marginBottom: 5 }}>
       <div className="ant-card-head">
         <div className="ant-card-head-wrapper">
           <div className="ant-card-head-title" style={{ padding: '8px 0' }}>
             <div>
-              {moment(review.date).format('LLL')}
+              {moment(parseInt(post.timestamp)).format('LLL')}
               &nbsp;
-              {review.trusted && (
+              {post.trusted && (
                 <Icon
                   type="safety-certificate"
                   style={{ color: '#52c41a' }}
@@ -21,20 +21,20 @@ export const Review = ({ review }) => {
             </div>
           </div>
           <div className="ant-card-extra" style={{ padding: '8px 0' }}>
-            <Rate disabled value={review.rate} />
+            <Rate disabled value={parseFloat(post.rating)} />
           </div>
         </div>
       </div>
       <div className="ant-card-body" style={{ padding: '5px 24px 0' }}>
-        <p>{review.comment}</p>
+        <p>{post.text}</p>
         <p
           style={{ textAlign: 'right', marginBottom: 4 }}
           title="Review rating"
         >
           <Icon type="like" twoToneColor="#52c41a" theme="twoTone" />
-          &nbsp; {review.likes} &nbsp;
+          {/* &nbsp; {post.likes} &nbsp; */}
           <Icon type="dislike" twoToneColor="#eb2f96" theme="twoTone" />
-          &nbsp; {review.dislikes}
+          {/* &nbsp; {post.dislikes} */}
         </p>
       </div>
     </div>
