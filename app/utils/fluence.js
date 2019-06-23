@@ -13,7 +13,6 @@ const ethereumUrl = 'http://geth.fluence.one:8545';
  * @param {Review. Must contain fields text, rating (int 1 - 5), url} review
  */
 async function createReview(review) {
-  
   if (!review.rating) {
     throw new Error('Rating is required');
   }
@@ -22,20 +21,28 @@ async function createReview(review) {
     throw new Error('URL is required');
   }
 
-  const id = Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
+  const id =
+    Math.random()
+      .toString(36)
+      .substring(2) + new Date().getTime().toString(36);
   const session = await fluence.connect(contract, appId, ethereumUrl);
   const timestamp = new Date().getTime();
   const author = await getAuthor();
-  const command = `SADD '${review.url}' '${encodeURI(review.text||'').replace("'", '%ZZZ')}:${review.rating}:${timestamp}:${await getAuthor()}:${id}'`;
-  console.log(command);
-  return session.request(command).result().then(rs => {
-    return {
-      id,
-      timestamp,
-      author,
-      ...review,
-    };
-  });
+  const command = `SADD '${review.url}' '${encodeURI(review.text || '')}:${
+    review.rating
+  }:${timestamp}:${await getAuthor()}:${id}'`;
+  console.log({ command });
+  return session
+    .request(command)
+    .result()
+    .then((rs) => {
+      return {
+        id,
+        timestamp,
+        author,
+        ...review,
+      };
+    });
 }
 
 /**
@@ -46,29 +53,32 @@ async function createReview(review) {
 async function queryReviews(url) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
   const command = `SMEMBERS ${url}`;
-  console.log(command);
-  return session.request(command).result().then((r) => {
-    const reviews = [];
-    const str = r.asString();
 
-    const parts = str.split('\n');
-    if (parts.length >= 3) {
-      for (let i = 2; i < parts.length; i += 2) {
-        const part = parts[i];
+  return session
+    .request(command)
+    .result()
+    .then((r) => {
+      const reviews = [];
+      const str = r.asString();
 
-        const reviewParts = part.split(':');
-        reviews.push({
-          text: reviewParts[0] !== '0' ? decodeURI(reviewParts[0]).replace('%ZZZ', "'") : '',
-          rating: reviewParts[1],
-          timestamp: reviewParts[2],
-          author: reviewParts[3],
-          id: reviewParts[4],
-          url,
-        });
+      const parts = str.split('\n');
+      if (parts.length >= 3) {
+        for (let i = 2; i < parts.length; i += 2) {
+          const part = parts[i];
+
+          const reviewParts = part.split(':');
+          reviews.push({
+            text: reviewParts[0] !== '0' ? decodeURI(reviewParts[0]) : '',
+            rating: reviewParts[1],
+            timestamp: reviewParts[2],
+            author: reviewParts[3],
+            id: reviewParts[4],
+            url,
+          });
+        }
       }
-    }
-    return reviews;
-  });
+      return reviews;
+    });
 }
 
 /**
@@ -78,7 +88,7 @@ async function queryReviews(url) {
  * @param {type of vote, either 'upvote' or 'downvote'} type
  */
 async function vote(id, type) {
-  console.log({id,type})
+  console.log({ id, type });
   if (!(type === 'upvote' || type === 'downvote')) {
     throw new Error('Invalid vote type');
   }
@@ -86,10 +96,13 @@ async function vote(id, type) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
   const command = `SADD ${id.trim()}_${type.trim()} ${await getAuthor()}`;
 
-  return session.request(command).result().then((r) => {
-    const rs = r.asString();
-    return rs.substr(1).trim();
-  });
+  return session
+    .request(command)
+    .result()
+    .then((r) => {
+      const rs = r.asString();
+      return rs.substr(1).trim();
+    });
 }
 
 async function queryVotes(id) {
@@ -100,21 +113,27 @@ async function queryVotes(id) {
   const upvote = `SCARD ${id.trim()}_upvote`;
   const downvote = `SCARD ${id.trim()}_downvote`;
 
-  const p1 = session.request(upvote).result().then((r) => {
-    const rs = r.asString();
-    return {
-      upvote: rs.substr(1).trim()
-    };
-  });
+  const p1 = session
+    .request(upvote)
+    .result()
+    .then((r) => {
+      const rs = r.asString();
+      return {
+        upvote: rs.substr(1).trim(),
+      };
+    });
 
-  const p2 = session.request(downvote).result().then((r) => {
-    const rs = r.asString();
-    return {
-      downvote: rs.substr(1).trim()
-    };
-  });
+  const p2 = session
+    .request(downvote)
+    .result()
+    .then((r) => {
+      const rs = r.asString();
+      return {
+        downvote: rs.substr(1).trim(),
+      };
+    });
 
-  return Promise.all([p1, p2]).then(r => ({
+  return Promise.all([p1, p2]).then((r) => ({
     ...r[0],
     ...r[1],
   }));
@@ -129,19 +148,25 @@ async function canVote(id) {
   const upvote = `SISMEMBER ${id.trim()}_upvote ${await getAuthor()}`;
   const downvote = `SISMEMBER ${id.trim()}_downvote ${await getAuthor()}`;
 
-  const p1 = session.request(upvote).result().then((r) => {
-    const rs = r.asString();
-    return {
-      upvote: rs.substr(1).trim()
-    };
-  });
+  const p1 = session
+    .request(upvote)
+    .result()
+    .then((r) => {
+      const rs = r.asString();
+      return {
+        upvote: rs.substr(1).trim(),
+      };
+    });
 
-  const p2 = session.request(downvote).result().then((r) => {
-    const rs = r.asString();
-    return {
-      downvote: rs.substr(1).trim()
-    };
-  });
+  const p2 = session
+    .request(downvote)
+    .result()
+    .then((r) => {
+      const rs = r.asString();
+      return {
+        downvote: rs.substr(1).trim(),
+      };
+    });
 
   return Promise.all([p1, p2]).then((r) => {
     const result = {
@@ -152,10 +177,4 @@ async function canVote(id) {
   });
 }
 
-export {
-  createReview,
-  queryReviews,
-  vote,
-  queryVotes,
-  canVote,
-};
+export { createReview, queryReviews, vote, queryVotes, canVote };
