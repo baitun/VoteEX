@@ -46,21 +46,26 @@ async function createReview(review) {
     data: review.text,
   }, jwk);
 
-  const key = await getAuthor();
+  const author = await getAuthor();
+  const timestamp = new Date().getTime();
 
   tx.addTag('Content-Type', 'text/plain');
   tx.addTag('App-Name', 'Votics');
   tx.addTag('Votics-Rating', review.rating);
   tx.addTag('Votics-URL', review.url);
-  tx.addTag('Votics-Timestamp', new Date().getTime());
-  tx.addTag('Votics-Author', key);
+  tx.addTag('Votics-Timestamp', timestamp);
+  tx.addTag('Votics-Author', author);
 
   await arweave.transactions.sign(tx, jwk);
-
+  const txId = tx.id;
   console.log(`Sending transaction with id: ${JSON.stringify(tx)}`);
   return arweave.transactions.post(tx).then(rs => ({
-    ...rs,
-    txId: tx.id,
+    ...review,
+    txId,
+    timestamp,
+    author,
+    id: txId,
+    trusted: true,
   }));
 }
 

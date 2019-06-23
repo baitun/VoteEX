@@ -3,6 +3,7 @@ import { Button, Rate, Icon, Switch } from 'antd';
 import { Reviews } from '../components/Reviews/Reviews';
 import TextArea from 'antd/lib/input/TextArea';
 import * as fluence from '../utils/fluence';
+import * as arweave from '../utils/arweave';
 
 export class PageNewReview extends React.Component {
   state = {
@@ -13,19 +14,24 @@ export class PageNewReview extends React.Component {
   };
 
   submit = () => {
-    const { rate, comment, advanced } = this.state;
+    const { rate, comment, advanced} = this.state;
     const { host } = this.props;
     this.setState({ loading: true });
 
-    fluence
-      .createReview({
-        text: comment,
-        rating: rate,
-        url: host,
-      })
-      .then((response) => {
-        console.log(response);
+    const newPost = {
+      text: comment,
+      rating: rate,
+      url: host,
+    }
+
+    const lib = advanced ? arweave : fluence;
+
+    lib
+      .createReview(newPost)
+      .then((post) => {
+        console.log({newPost: post});
         this.setState({ loading: false });
+        this.props.addNewPost(post, advanced)
       });
   };
 

@@ -1,8 +1,9 @@
 import React from 'react';
-import { Icon, Rate } from 'antd';
+import { Icon, Rate, Button } from 'antd';
 import moment from 'moment';
+import { vote } from '../../../utils/fluence';
 
-export const Review = ({ post }) => {
+export const Review = ({ post, onVoteClick }) => {  
   return (
     <div className="ant-card ant-card-bordered" style={{ marginBottom: 5 }}>
       <div className="ant-card-head">
@@ -31,10 +32,9 @@ export const Review = ({ post }) => {
           style={{ textAlign: 'right', marginBottom: 4 }}
           title="Review rating"
         >
-          <Icon type="like" twoToneColor="#52c41a" theme="twoTone" />
-          {/* &nbsp; {post.likes} &nbsp; */}
-          <Icon type="dislike" twoToneColor="#eb2f96" theme="twoTone" />
-          {/* &nbsp; {post.dislikes} */}
+          <Button onClick={()=>onVoteClick(post.id, "upvote")}  type="link"><Icon type="like" style={{color: '#52c41a'}}  /> {post.upvote}</Button>
+          <Button onClick={()=>onVoteClick(post.id, "downvote")} type="link"><Icon type="dislike" style={{color: '#eb2f96'}}  /> {post.downvote}</Button>
+          
         </p>
       </div>
     </div>

@@ -27,8 +27,17 @@ async function createReview(review) {
 
   const id = Math.random().toString(36).substring(2) + (new Date()).getTime().toString(36);
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${new Date().getTime()}:${await getAuthor()}:${id}'`;
-  return session.request(command).result();
+  const timestamp = new Date().getTime();
+  const author = await getAuthor();
+  const command = `SADD '${review.url}' '${encodeURI(review.text)}:${review.rating}:${timestamp}:${await getAuthor()}:${id}'`;
+  return session.request(command).result().then(rs => {
+    return {
+      id,
+      timestamp,
+      author,
+      ...review,
+    };
+  });
 }
 
 /**
@@ -71,12 +80,13 @@ async function queryReviews(url) {
  * @param {type of vote, either 'upvote' or 'downvote'} type
  */
 async function vote(id, type) {
+  console.log({id,type})
   if (!(type === 'upvote' || type === 'downvote')) {
     throw new Error('Invalid vote type');
   }
 
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const command = `SADD ${id}_${type} ${await getAuthor()}`;
+  const command = `SADD ${id.trim()}_${type.trim()} ${await getAuthor()}`;
 
   return session.request(command).result().then((r) => {
     const rs = r.asString();
@@ -85,9 +95,12 @@ async function vote(id, type) {
 }
 
 async function queryVotes(id) {
+  if (!id) {
+    throw new Error('Id should not be undefined');
+  }
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const upvote = `SCARD ${id}_upvote`;
-  const downvote = `SCARD ${id}_downvote`;
+  const upvote = `SCARD ${id.trim()}_upvote`;
+  const downvote = `SCARD ${id.trim()}_downvote`;
 
   const p1 = session.request(upvote).result().then((r) => {
     const rs = r.asString();
@@ -110,9 +123,13 @@ async function queryVotes(id) {
 }
 
 async function canVote(id) {
+  if (!id) {
+    throw new Error('Id should not be undefined');
+  }
+
   const session = await fluence.connect(contract, appId, ethereumUrl);
-  const upvote = `SISMEMBER ${id}_upvote ${await getAuthor()}`;
-  const downvote = `SISMEMBER ${id}_downvote ${await getAuthor()}`;
+  const upvote = `SISMEMBER ${id.trim()}_upvote ${await getAuthor()}`;
+  const downvote = `SISMEMBER ${id.trim()}_downvote ${await getAuthor()}`;
 
   const p1 = session.request(upvote).result().then((r) => {
     const rs = r.asString();
