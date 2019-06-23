@@ -4,7 +4,7 @@ import moment from 'moment';
 
 export const Review = ({ post, onVoteClick }) => {
   if (!post) return null;
-  if(!post.text) return null;
+  if (!post.text) return null;
   if (post.text.length === 0) return null;
   return (
     <div className="ant-card ant-card-bordered" style={{ marginBottom: 5 }}>
@@ -12,7 +12,7 @@ export const Review = ({ post, onVoteClick }) => {
         <div className="ant-card-head-wrapper">
           <div className="ant-card-head-title" style={{ padding: '8px 0' }}>
             <div>
-              {moment(parseInt(post.timestamp)).format('LLL')}
+              {moment(parseInt(post.timestamp)).format('lll')}
               &nbsp;
               {post.trusted && (
                 <a
@@ -39,7 +39,8 @@ export const Review = ({ post, onVoteClick }) => {
           style={{
             textAlign: 'right',
             marginBottom: 4,
-            opacity: (post.upvote === undefined || post.downvote === undefined)?0:1,
+            opacity:
+              post.upvote === undefined || post.downvote === undefined ? 0 : 1,
           }}
         >
           <Button
