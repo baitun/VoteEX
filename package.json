@@ -50,12 +50,14 @@
     "eslint-plugin-import": "^1.16.0",
     "eslint-plugin-jsx-a11y": "^2.2.3",
     "eslint-plugin-react": "^6.5.0",
+    "husky": "^2.5.0",
     "jsdom": "^15.1.1",
     "jsdom-global": "^3.0.2",
     "minimist": "^1.2.0",
     "mocha": "^3.5.3",
     "mocha-webpack": "^1.1.0",
     "postcss-loader": "^1.2.1",
+    "pretty-quick": "^1.11.1",
     "pug-cli": "^1.0.0-alpha6",
     "react-addons-test-utils": "^15.0.2",
     "rimraf": "^2.4.3",
@@ -80,5 +82,10 @@
     "redux-thunk": "^2.0.1",
     "arweave": "^1.4.0",
     "fluence": "^0.1.26"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "pretty-quick --staged"
+    }
   }
 }
