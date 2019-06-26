@@ -42,9 +42,12 @@ async function createReview(review) {
     throw new Error('URL is required');
   }
 
-  const tx = await arweave.createTransaction({
-    data: review.text,
-  }, jwk);
+  const tx = await arweave.createTransaction(
+    {
+      data: review.text,
+    },
+    jwk
+  );
 
   const author = await getAuthor();
   const timestamp = new Date().getTime();
@@ -59,7 +62,7 @@ async function createReview(review) {
   await arweave.transactions.sign(tx, jwk);
   const txId = tx.id;
   console.log(`Sending transaction with id: ${JSON.stringify(tx)}`);
-  return arweave.transactions.post(tx).then(rs => ({
+  return arweave.transactions.post(tx).then((rs) => ({
     ...review,
     txId,
     timestamp,
@@ -137,10 +140,4 @@ async function queryReviews(url) {
   return Promise.all(reviews);
 }
 
-export {
-  createReview,
-  queryReviews,
-  setJwk,
-  getAuthor,
-  waitForTx,
-};
+export { createReview, queryReviews, setJwk, getAuthor, waitForTx };

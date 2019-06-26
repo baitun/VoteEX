@@ -14,7 +14,7 @@ export class PageNewReview extends React.Component {
   };
 
   submit = () => {
-    const { rate, comment, advanced} = this.state;
+    const { rate, comment, advanced } = this.state;
     const { host } = this.props;
     this.setState({ loading: true });
 
@@ -22,16 +22,14 @@ export class PageNewReview extends React.Component {
       text: comment,
       rating: rate,
       url: host,
-    }
+    };
 
     const lib = advanced ? arweave : fluence;
 
-    lib
-      .createReview(newPost)
-      .then((post) => {
-        this.setState({ loading: false });
-        this.props.addNewPost(post, advanced)
-      });
+    lib.createReview(newPost).then((post) => {
+      this.setState({ loading: false });
+      this.props.addNewPost(post, advanced);
+    });
   };
 
   render() {
