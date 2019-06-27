@@ -1,5 +1,7 @@
 # Blockchain-based site reviews Chrome extension
 
+![Chrome Extension screenshot](docs/screenshot.png)
+
 This project is part of [Decentralized Web Hackathon](https://web3hack.dev/), sponsored by [fluence](http://fluence.network/) and [arweave](http://arweave.org/) (Jun 22-23 2019, Minsk, Belarus).
 
 Members of our team [EasyChain](https://easychain.tech/):
