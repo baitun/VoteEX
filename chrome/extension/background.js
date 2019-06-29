@@ -25,10 +25,10 @@ require('./background/contextMenus');
 require('./background/inject');
 require('./background/badge');
 
-const aggregate = require('../../app/utils/aggregate');
+/** Interaction with injected script via messages */
 chrome.runtime.onMessage.addListener(function(request, sender, sendResponse) {
   if (request.method == 'test') {
-    console.log(request);
+    const aggregate = require('../../app/utils/aggregate');
 
     aggregate.queryAggregate(request.host).then((result) => {
       sendResponse(result);
