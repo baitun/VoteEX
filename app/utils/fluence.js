@@ -8,9 +8,7 @@ const ethereumUrl = 'http://geth.fluence.one:8545';
 
 /**
  * Creates new review using arweave
- *
- * @param {Keyfile that will be used to sign a transaction} jwk
- * @param {Review. Must contain fields text, rating (int 1 - 5), url} review
+ * @param {{text:string, url:string, rating:number}} review Must contain fields text, rating (int 1 - 5), url
  */
 async function createReview(review) {
   if (!review.rating) {
@@ -28,10 +26,9 @@ async function createReview(review) {
   const session = await fluence.connect(contract, appId, ethereumUrl);
   const timestamp = new Date().getTime();
   const author = await getAuthor();
-  const command = `SADD '${review.url}' '${encodeURI(review.text || '')}:${
-    review.rating
-  }:${timestamp}:${await getAuthor()}:${id}'`;
-  console.log({ command });
+  const text = encodeURI(review.text || '');
+  const command = `SADD '${review.url}' '${text}:${review.rating}:${timestamp}:${author}:${id}'`;
+  console.log('[createReview] command =', { command });
   return session
     .request(command)
     .result()
@@ -51,7 +48,12 @@ async function createReview(review) {
  * @param {URL to searh reviews for} url
  */
 async function queryReviews(url) {
-  const session = await fluence.connect(contract, appId, ethereumUrl);
+  let session;
+  try {
+    session = await fluence.connect(contract, appId, ethereumUrl);
+  } catch (error) {
+    console.error(error);
+  }
   const command = `SMEMBERS ${url}`;
 
   return session
@@ -78,6 +80,10 @@ async function queryReviews(url) {
         }
       }
       return reviews;
+    })
+    .catch((error) => {
+      console.error(error);
+      return [];
     });
 }
 
