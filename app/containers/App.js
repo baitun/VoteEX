@@ -1,13 +1,12 @@
-import { Divider, Rate, Button, BackTop } from 'antd';
+import { BackTop, Rate, Spin } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as TodoActions from '../actions/todos';
-import { Reviews } from '../components/Reviews/Reviews';
-import { PageListReviews } from './PageListReviews';
-import { PageNewReview } from './PageNewReview';
 import { queryAggregate } from '../utils/aggregate';
 import { queryVotes, vote } from '../utils/fluence';
+import { PageListReviews } from './PageListReviews';
+import { PageNewReview } from './PageNewReview';
 
 const PAGES = {
   NEW: 'PageNewReview',
@@ -27,7 +26,6 @@ export default class App extends Component {
     page: PAGES.LIST,
     posts: [],
     loading: false,
-    average: 'NO',
     host: undefined,
   };
 
@@ -117,8 +115,10 @@ export default class App extends Component {
     const { page, posts, host, loading } = this.state;
 
     const average =
-      posts.reduce((acc, post) => acc + parseFloat(post.rating), 0) /
-      posts.length;
+      posts.length > 0
+        ? posts.reduce((acc, post) => acc + parseFloat(post.rating), 0) /
+          posts.length
+        : 0;
 
     if (host === undefined) return null;
 
@@ -138,7 +138,13 @@ export default class App extends Component {
           <h1>{host}</h1>
           <h4>Reputation</h4>
           <div style={{ fontSize: 60, lineHeight: '1' }}>
-            {average ? average.toFixed(1) : 'NO'}
+            {average === undefined ? (
+              <Spin />
+            ) : average ? (
+              average.toFixed(1)
+            ) : (
+              'NO'
+            )}
           </div>
           <Rate disabled allowHalf value={average} />
         </header>
