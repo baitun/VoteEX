@@ -13,11 +13,20 @@
     "128": "img/icon-128.png"
   },
   "web_accessible_resources": [
-    "inject.html"
+    "inject.html",
+    "img/good.png",
+    "img/bad.png",
+    "img/unknown.png",
+    "img/neutral.png"
   ],
   "background": {
     "page": "background.html"
   },
-  "permissions": [ "contextMenus", "tabs", "storage", "https://www.google.com/*" ],
+  "permissions": [
+    "contextMenus",
+    "tabs",
+    "storage",
+    "https://www.google.com/*"
+  ],
   "content_security_policy": "default-src 'self'; script-src 'self'; style-src * 'unsafe-inline'; img-src 'self' data:;"
 }
