@@ -76,6 +76,7 @@ export default class App extends Component {
   };
 
   loadLikes = async (posts) => {
+    return; // @TODO remove this line when fluence will be fixed
     for (let i = 0; i < posts.length; i++) {
       const post = posts[i];
       queryVotes(post.id).then((votes) => {
