@@ -1,0 +1,52 @@
+{
+  "projectName": "VoteEX",
+  "projectOwner": "baitun",
+  "repoType": "github",
+  "repoHost": "https://github.com",
+  "files": [
+    "README.md"
+  ],
+  "imageSize": 100,
+  "commit": true,
+  "commitConvention": "eslint",
+  "contributors": [
+    {
+      "login": "baitun",
+      "name": "Yury Savin",
+      "avatar_url": "https://avatars0.githubusercontent.com/u/5827605?v=4",
+      "profile": "https://savin.dev",
+      "contributions": [
+        "code"
+      ]
+    },
+    {
+      "login": "execc",
+      "name": "execc",
+      "avatar_url": "https://avatars2.githubusercontent.com/u/13734701?v=4",
+      "profile": "https://github.com/execc",
+      "contributions": [
+        "code",
+        "talk"
+      ]
+    },
+    {
+      "login": "JulyElektra",
+      "name": "Yuliya Palamarchuk",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/15259841?v=4",
+      "profile": "http://easychain.tech",
+      "contributions": [
+        "ideas"
+      ]
+    },
+    {
+      "login": "AndreKuren",
+      "name": "AndreKuren",
+      "avatar_url": "https://avatars1.githubusercontent.com/u/49484901?v=4",
+      "profile": "https://github.com/AndreKuren",
+      "contributions": [
+        "ideas"
+      ]
+    }
+  ],
+  "contributorsPerLine": 7
+}
