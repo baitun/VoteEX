@@ -76,21 +76,15 @@ export default class App extends Component {
   };
 
   loadLikes = async (posts) => {
-    let promises = [];
     for (let i = 0; i < posts.length; i++) {
       const post = posts[i];
-      promises.push(queryVotes(post.id));
-    }
-
-    Promise.all(promises).then((values) => {
-      const newPosts = values.map((v, i) => {
-        return {
-          ...posts[i],
-          ...v,
-        };
+      queryVotes(post.id).then((votes) => {
+        const newPosts = this.state.posts.map((p) =>
+          p.id !== post.id ? p : { ...p, ...votes }
+        );
+        this.setState(newPosts);
       });
-      this.setState({ posts: newPosts });
-    });
+    }
   };
 
   loadReviews = (host) => {
