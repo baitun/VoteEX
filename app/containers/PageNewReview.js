@@ -9,7 +9,7 @@ export class PageNewReview extends React.Component {
   state = {
     rate: undefined,
     comment: '',
-    advanced: false,
+    advanced: true,
     loading: false,
   };
 
@@ -55,14 +55,14 @@ export class PageNewReview extends React.Component {
               style={{ maxWidth: '70%' }}
             />
           </p>
-          <p>
+          {/* <p>
             <Switch
               checkedChildren={<Icon type="check" />}
               unCheckedChildren={<Icon type="close" />}
               onChange={(advanced) => this.setState({ advanced })}
             />{' '}
             &nbsp; Advanced storage
-          </p>
+          </p> */}
           <p>
             <Button
               disabled={rate === undefined}
