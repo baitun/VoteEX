@@ -1,8 +1,9 @@
-import { BackTop, Rate, Spin } from 'antd';
+import { BackTop } from 'antd';
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import * as TodoActions from '../actions/todos';
+import { Header } from '../components/Header/Header';
 import { queryAggregate } from '../utils/aggregate';
 import { queryVotes, vote } from '../utils/fluence';
 import { PageListReviews } from './PageListReviews';
@@ -119,30 +120,7 @@ export default class App extends Component {
 
     return (
       <div>
-        <header
-          style={{
-            textAlign: 'center',
-            background: '#f0f2f5',
-            padding: 10,
-            // position: 'fixed',
-            // width: '100%',
-            // height: 230,
-            // zIndex: 999,
-          }}
-        >
-          <h1>{host}</h1>
-          <h4>Reputation</h4>
-          <div style={{ fontSize: 60, lineHeight: '1' }}>
-            {average === undefined ? (
-              <Spin />
-            ) : average ? (
-              average.toFixed(1)
-            ) : (
-              'NO'
-            )}
-          </div>
-          <Rate disabled allowHalf value={average} />
-        </header>
+        <Header host={host} average={average} />
 
         {page === PAGES.LIST ? (
           <PageListReviews
