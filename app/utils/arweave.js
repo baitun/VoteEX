@@ -7,11 +7,12 @@ const arweave = Arweave.init({
   protocol: 'https',
 });
 
+/** JSON Web Key */
 let jwk = defaultJwk;
 
 /**
- *
- * @param {Keyfile that will be used to sign a transaction} newJwk
+ * Set new JSON Web Key
+ * @param {string} newJwk Keyfile that will be used to sign a transaction
  */
 function setJwk(newJwk) {
   jwk = newJwk;
