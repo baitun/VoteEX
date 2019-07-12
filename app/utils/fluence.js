@@ -48,7 +48,6 @@ async function createReview(review) {
  * @param {URL to searh reviews for} url
  */
 async function queryReviews(url) {
-  return Promise.resolve([]); // @TODO remove this line when fluence will be fixed
   let session;
   try {
     session = await fluence.connect(contract, appId, ethereumUrl);
