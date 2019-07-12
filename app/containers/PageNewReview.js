@@ -26,10 +26,16 @@ export class PageNewReview extends React.Component {
 
     const lib = advanced ? arweave : fluence;
 
-    lib.createReview(newPost).then((post) => {
-      this.setState({ loading: false });
-      this.props.addNewPost(post, advanced);
-    });
+    lib
+      .createReview(newPost)
+      .then((post) => {
+        this.setState({ loading: false });
+        this.props.addNewPost(post, advanced);
+      })
+      .catch((error) => {
+        this.setState({ loading: false });
+        console.error(error);
+      });
   };
 
   render() {
