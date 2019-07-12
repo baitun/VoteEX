@@ -5,18 +5,17 @@ import { Upload, Icon, message } from 'antd';
 const { Dragger } = Upload;
 
 const props = {
-  name: 'file',
-  multiple: true,
-  onChange(info) {
-    const { status } = info.file;
-    if (status !== 'uploading') {
-      console.log(info.file, info.fileList);
-    }
-    if (status === 'done') {
-      message.success(`${info.file.name} file uploaded successfully.`);
-    } else if (status === 'error') {
-      message.error(`${info.file.name} file upload failed.`);
-    }
+  accept: 'application/json',
+  beforeUpload: (file) => {
+    const fileReader = new FileReader();
+    fileReader.onload = (event) => {
+      const result = event.target.result;
+      // @TODO Save jwk to chrome.storage
+      console.log({ result });
+    };
+    fileReader.readAsText(file);
+
+    return false; // do not upload file anywhere
   },
 };
 
