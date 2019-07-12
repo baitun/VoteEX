@@ -1,6 +1,5 @@
 import React from 'react';
-import { Button, Rate, Icon, Switch } from 'antd';
-import { Reviews } from '../components/Reviews/Reviews';
+import { Button, Rate, Icon, Switch, notification } from 'antd';
 import TextArea from 'antd/lib/input/TextArea';
 import * as fluence from '../utils/fluence';
 import * as arweave from '../utils/arweave';
@@ -35,6 +34,9 @@ export class PageNewReview extends React.Component {
       .catch((error) => {
         this.setState({ loading: false });
         console.error(error);
+        notification.error({
+          message: 'Something wrong ☹',
+        });
       });
   };
 
