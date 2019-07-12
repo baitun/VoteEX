@@ -59,21 +59,25 @@ export default class App extends Component {
     });
     this.setState({ posts });
 
-    vote(id, type).then((newNumber) => {
-      const posts = this.state.posts.map((post) => {
-        if (post.id === id) {
-          if (type === 'upvote') {
-            return { ...post, upvote: newNumber };
+    vote(id, type)
+      .then((newNumber) => {
+        const posts = this.state.posts.map((post) => {
+          if (post.id === id) {
+            if (type === 'upvote') {
+              return { ...post, upvote: newNumber };
+            } else {
+              return { ...post, downvote: newNumber };
+            }
           } else {
-            return { ...post, downvote: newNumber };
+            return post;
           }
-        } else {
-          return post;
-        }
+        });
+        console.log('newPosts after load new likes', posts);
+        this.setState({ posts: posts });
+      })
+      .catch((error) => {
+        console.error(error);
       });
-      console.log('newPosts after load new likes', posts);
-      this.setState({ posts: posts });
-    });
   };
 
   loadLikes = async (posts) => {

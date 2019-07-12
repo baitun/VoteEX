@@ -52,7 +52,9 @@ async function queryReviews(url) {
   try {
     session = await fluence.connect(contract, appId, ethereumUrl);
   } catch (error) {
+    console.error('[Error in fluence->getReviews()]');
     console.error(error);
+    return Promise.resolve([]);
   }
   const command = `SMEMBERS ${url}`;
 
@@ -89,17 +91,26 @@ async function queryReviews(url) {
 
 /**
  * Leaves vote for review
- *
- * @param {review id to vote for} id
- * @param {type of vote, either 'upvote' or 'downvote'} type
+ * @param {number} id review id to vote for
+ * @param {'upvote'|'downvote'} type type of vote, either 'upvote' or 'downvote'
+ * @returns {number} new number of likes
  */
 async function vote(id, type) {
-  console.log({ id, type });
+  console.log('[fluence->vote()]', { id, type });
   if (!(type === 'upvote' || type === 'downvote')) {
     throw new Error('Invalid vote type');
   }
 
-  const session = await fluence.connect(contract, appId, ethereumUrl);
+  let session;
+
+  try {
+    session = await fluence.connect(contract, appId, ethereumUrl);
+  } catch (error) {
+    console.error('[Error in fluence->vote()]');
+    console.error(error);
+    return Promise.reject(error);
+  }
+
   const command = `SADD ${id.trim()}_${type.trim()} ${await getAuthor()}`;
 
   return session
@@ -107,7 +118,7 @@ async function vote(id, type) {
     .result()
     .then((r) => {
       const rs = r.asString();
-      return rs.substr(1).trim();
+      return Number(rs.substr(1).trim());
     });
 }
 
@@ -115,7 +126,13 @@ async function queryVotes(id) {
   if (!id) {
     throw new Error('Id should not be undefined');
   }
-  const session = await fluence.connect(contract, appId, ethereumUrl);
+  let session;
+  try {
+    session = await fluence.connect(contract, appId, ethereumUrl);
+  } catch (error) {
+    console.error(error);
+    return Promise.reject(error);
+  }
   const upvote = `SCARD ${id.trim()}_upvote`;
   const downvote = `SCARD ${id.trim()}_downvote`;
 
