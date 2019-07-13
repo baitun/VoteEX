@@ -18,7 +18,7 @@ window.addEventListener('load', () => {
         const image =
           posts.length === 0 ? 'unknown' : average > 3 ? 'good' : 'bad';
         img.src = chrome.runtime.getURL(`img/${image}.png`);
-        img.style.width = '20px';
+        img.style.width = '16px';
         img.style.marginLeft = '5px';
         console.log(img.src);
         h3.appendChild(img);
